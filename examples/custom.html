@@ -1,0 +1,51 @@
+<!doctype html>
+<html ng-app="Demo">
+<head>
+  <meta charset="utf-8" />
+  <title>
+    angular-visibility-change: Custom Configuration
+  </title>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+  <script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
+  <script type="text/javascript" src="../src/angular-visibility-change.js"></script>
+  <script type="text/javascript">
+
+    angular.module('Demo', ['visibilityChange'])
+
+      .run(function(VisibilityChange) {
+        VisibilityChange.configure({
+          broadcast: {
+            visible: 'myVisibleEvent',
+            hidden: 'myHiddenEvent'
+          }
+        })
+      })
+
+      .factory('now', function() {
+        return function() {
+          return moment().format('HH:mm:ss');
+        };
+      })
+
+      .controller('DemoController', function($rootScope, $scope, now) {
+
+        $scope.messages = [];
+
+        $rootScope.$on('myHiddenEvent', function() {
+          $scope.messages.push('myHiddenEvent was broadcast at ' + now());
+        })
+
+        $rootScope.$on('myVisibleEvent', function() {
+          $scope.messages.push('myVisibleEvent was broadcast at ' + now());
+        });
+      });
+
+  </script>
+</head>
+<body ng-controller="DemoController">
+  <p>Navigate to another tab/window and then return here</p>
+  <ul>
+    <li ng-repeat="message in messages track by $index">{{ message }}</li>
+  </ul>
+</body>
+</html>

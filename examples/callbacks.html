@@ -1,0 +1,46 @@
+<!doctype html>
+<html ng-app="Demo">
+<head>
+  <meta charset="utf-8" />
+  <title>
+    angular-visibility-change: Callback API
+  </title>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+  <script type="text/javascript" src="../bower_components/angular/angular.min.js"></script>
+  <script type="text/javascript" src="../src/angular-visibility-change.js"></script>
+  <script type="text/javascript">
+
+    angular.module('Demo', ['visibilityChange'])
+
+      .factory('now', function() {
+        return function() {
+          return moment().format('HH:mm:ss');
+        };
+      })
+
+      .controller('DemoController', function($scope, now, VisibilityChange) {
+
+        $scope.messages = [];
+
+        VisibilityChange.onVisible(function() {
+          $scope.messages.push('onVisible callback called at ' + now());
+        })
+
+        VisibilityChange.onHidden(function() {
+          $scope.messages.push('onHidden callback called at ' + now());
+        });
+
+        VisibilityChange.onChange(function(visible) {
+          $scope.messages.push('onChange callback called at ' + now() + ' with ' + visible);
+        })
+      });
+
+  </script>
+</head>
+<body ng-controller="DemoController">
+  <p>Navigate to another tab/window and then return here</p>
+  <ul>
+    <li ng-repeat="message in messages track by $index">{{ message }}</li>
+  </ul>
+</body>
+</html>

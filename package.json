@@ -1,0 +1,37 @@
+{
+  "name": "angular-visibility-change",
+  "version": "0.0.1",
+  "description": "Detect window visibility changes in Angular.",
+  "main": "./dist/angular-visibility-change.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/stephenkubovic/angular-visibility-change"
+  },
+  "keywords": [
+    "angular",
+    "visibilitychange"
+  ],
+  "author": "Stephen Kubovic <stephen@skbvc.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/stephenkubovic/angular-visibility-change",
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "grunt": "^0.4.5",
+    "grunt-bower-task": "^0.4.0",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-uglify": "^0.7.0",
+    "grunt-karma": "^0.10.1",
+    "karma": "^0.12.31",
+    "karma-chai": "^0.1.0",
+    "karma-coverage": "^0.2.7",
+    "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-sinon": "^1.0.4",
+    "mocha": "^2.1.0",
+    "sinon": "^1.12.2"
+  }
+}
