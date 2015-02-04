@@ -1,6 +1,6 @@
 /**
  * Detect window visibility changes in Angular.
- * @version v0.0.1 - 2015-01-31
+ * @version v0.0.1 - 2015-02-04
  * @link https://github.com/stephenkubovic/angular-visibility-change
  * @author Stephen Kubovic <stephen@skbvc.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -10,115 +10,93 @@
 
 var module = angular.module('visibilityChange', []);
 
-module.provider('VisibilityChange', function() {
+module.service('VisibilityChange', ['$document', '$rootScope', '$timeout', function($document, $rootScope, $timeout) {
 
   var broadcastVisibleEvent = 'windowBecameVisible',
       broadcastHiddenEvent = 'windowBecameHidden',
-      broadcastEnabled = true,
-      loggingEnabled = true;
+      broadcastEnabled = false,
+      loggingEnabled = false,
+      hidden = 'hidden',
+      changeCallbacks = [],
+      visibleCallbacks = [],
+      hiddenCallbacks = [],
+      $doc = $document[0],
+      visibilityChange;
 
-  var log = function(message) {
-    if (typeof console.log !== 'undefined' && loggingEnabled) {
-      console.log('WindowVisibility:', message);
-    }
-  };
-
-  var configure = function(config) {
-    config = config || {};
-
-    if (typeof config.visibleEvent === 'boolean') {
-      if (config.visibleEvent === false) {
-        broadcastVisibleEvent = false;
-      }
-    } else if (typeof config.visibleEvent === 'string') {
-      broadcastVisibleEvent = config.visibleEvent;
+  this.configure = function(config) {
+    if (typeof config !== 'object') {
+      throw new Error(config + ' is not a valid configuration object');
     }
 
-    if (typeof config.hiddenEvent === 'boolean') {
-      if (config.hiddenEvent === false) {
-        broadcastVisibleEvent = false;
-      }
-    } else if (typeof config.hiddenEvent === 'string') {
-      broadcastHiddenEvent = config.hiddenEvent;
-    }
-
-    if (config.broadcast === false) {
+    if (config.broadcast === true) {
       broadcastEnabled = true;
+    } else if (typeof config.broadcast === 'object') {
+      broadcastEnabled = true;
+      broadcastVisibleEvent = config.broadcast.visible || broadcastVisibleEvent;
+      broadcastHiddenEvent = config.broadcast.hidden || broadcastHiddenEvent;
     }
   };
 
-  this.$get = ['$rootScope', '$document', function($rootScope, $document) {
+  this.onChange = function(callback) {
+    changeCallbacks.push(callback);
+  };
 
-    var hidden = 'hidden',
-        changeCallbacks = [],
-        visibleCallbacks = [],
-        hiddenCallbacks = [],
-        visibilityChange;
+  this.onVisible = function(callback) {
+    visibleCallbacks.push(callback);
+  };
 
-    if (hidden in $document) {
-      visibilityChange = 'visibilitychange';
-    } else if ((hidden = 'webkitHidden') in $document) {
-      visibilityChange = 'webkitvisibilitychange';
-    } else if ((hidden = 'mozHidden') in $document) {
-      visibilityChange = 'mozvisibilitychange';
-    } else if ((hidden = 'msHidden')) {
-      visibilityChange = 'msvisibilitychange';
-    } else {
-      log('visibilitychange not supported in this browser');
-      return;
-    }
+  this.onHidden = function(callback) {
+    hiddenCallbacks.push(callback);
+  };
 
-    var onVisibilityChange = function() {
-      if (this[hidden]) {
-        log('Window became hidden');
+  if (hidden in $doc) {
+    visibilityChange = 'visibilitychange';
+  } else if ((hidden = 'webkitHidden') in $doc) {
+    visibilityChange = 'webkitvisibilitychange';
+  } else if ((hidden = 'mozHidden') in $doc) {
+    visibilityChange = 'mozvisibilitychange';
+  } else if ((hidden = 'msHidden') in $doc) {
+    visibilityChange = 'msvisibilitychange';
+  } else {
+    return;
+  }
+
+  var onVisibilityChange = function() {
+    $timeout(function() {
+      if ($document[0][hidden]) {
         notifyHidden();
       } else {
-        log('Window became visible');
         notifyVisible();
       }
-    };
+    }, 100);
+  };
 
-    var execCallbacks = function() {
-      var args = Array.prototype.slice.call(arguments),
-          callbacks = args.shift();
+  var execCallbacks = function() {
+    var args = Array.prototype.slice.call(arguments),
+        callbacks = args.shift();
 
-      for (var i = 0; i < callbacks.length; i++) {
-        callbacks[i].apply(null, args);
-      }
-    };
+    for (var i = 0; i < callbacks.length; i++) {
+      callbacks[i].apply(null, args);
+    }
+  };
 
-    var notifyHidden = function() {
-      if (broadcastEnabled) {
-        $rootScope.$broadcast(broadcastHiddenEvent);
-      }
-      execCallbacks(changeCallbacks, false);
-      execCallbacks(hiddenCallbacks);
-    };
+  var notifyHidden = function() {
+    if (broadcastEnabled) {
+      $rootScope.$broadcast(broadcastHiddenEvent);
+    }
+    execCallbacks(changeCallbacks, false);
+    execCallbacks(hiddenCallbacks);
+  };
 
-    var notifyVisible = function() {
-      if (broadcastEnabled) {
-        $rootScope.$broadcast(broadcastVisibleEvent);
-      }
-      execCallbacks(changeCallbacks, true);
-      execCallbacks(hiddenCallbacks);
-    };
+  var notifyVisible = function() {
+    if (broadcastEnabled) {
+      $rootScope.$broadcast(broadcastVisibleEvent);
+    }
+    execCallbacks(changeCallbacks, true);
+    execCallbacks(visibleCallbacks);
+  };
 
-    $document.on(visibilityChange, onVisibilityChange);
-
-    return {
-      onChange: function(callback) {
-        changeCallbacks.push(callback);
-      },
-      onVisible: function(callback) {
-        visibleCallbacks.push(callback);
-      },
-      onHidden: function(callback) {
-        hiddenCallbacks.push(callback);
-      },
-      configure: configure
-    };
-  }];
-
-});
+  $document.on(visibilityChange, onVisibilityChange);
+}]);
 
 })();
