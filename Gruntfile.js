@@ -51,7 +51,11 @@ module.exports = function(grunt) {
     },
     bower: {
       targetDir: './bower_components',
-      install: {}
+      install: {
+        options: {
+          targetDir: './bower_components'
+        }
+      }
     }
   });
 
