@@ -107,7 +107,7 @@ describe("VisibilityChange", function() {
         $timeout.flush();
 
         sinon.assert.calledOnce($rootScope.$broadcast);
-        sinon.assert.calledWith($rootScope.$broadcast, 'windowBecameVisible');
+        sinon.assert.calledWith($rootScope.$broadcast, 'pageBecameVisible');
       });
 
       it ('broadcasts hidden events', function() {
@@ -118,7 +118,7 @@ describe("VisibilityChange", function() {
         $timeout.flush();
 
         sinon.assert.calledOnce($rootScope.$broadcast);
-        sinon.assert.calledWith($rootScope.$broadcast, 'windowBecameHidden');
+        sinon.assert.calledWith($rootScope.$broadcast, 'pageBecameHidden');
       });
 
       it ('broadcasts custom events', function() {
@@ -149,7 +149,7 @@ describe("VisibilityChange", function() {
         $document.triggerHandler(_this.eventName);
         $timeout.flush();
         sinon.assert.calledOnce($rootScope.$broadcast);
-        sinon.assert.calledWith($rootScope.$broadcast, 'windowBecameVisible');
+        sinon.assert.calledWith($rootScope.$broadcast, 'pageBecameVisible');
 
         $rootScope.$broadcast.reset();
 
@@ -157,7 +157,7 @@ describe("VisibilityChange", function() {
         $document.triggerHandler(_this.eventName);
         $timeout.flush();
         sinon.assert.calledOnce($rootScope.$broadcast);
-        sinon.assert.calledWith($rootScope.$broadcast, 'windowBecameHidden');
+        sinon.assert.calledWith($rootScope.$broadcast, 'pageBecameHidden');
       });
 
       it ('throws an error if configuration is invalid', function() {

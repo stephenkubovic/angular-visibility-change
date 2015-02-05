@@ -6,8 +6,8 @@ var module = angular.module('visibilityChange', []);
 
 module.service('VisibilityChange', ['$document', '$rootScope', '$timeout', function($document, $rootScope, $timeout) {
 
-  var broadcastVisibleEvent = 'windowBecameVisible',
-      broadcastHiddenEvent = 'windowBecameHidden',
+  var broadcastVisibleEvent = 'pageBecameVisible',
+      broadcastHiddenEvent = 'pageBecameHidden',
       broadcastEnabled = false,
       loggingEnabled = false,
       hidden = 'hidden',

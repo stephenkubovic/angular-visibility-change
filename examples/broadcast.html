@@ -26,12 +26,12 @@
 
         $scope.messages = [];
 
-        $rootScope.$on('windowBecameHidden', function() {
-          $scope.messages.push('windowBecameHidden was broadcast at ' + now());
+        $rootScope.$on('pageBecameHidden', function() {
+          $scope.messages.push('pageBecameHidden was broadcast at ' + now());
         })
 
-        $rootScope.$on('windowBecameVisible', function() {
-          $scope.messages.push('windowBecameVisible was broadcast at ' + now());
+        $rootScope.$on('pageBecameVisible', function() {
+          $scope.messages.push('pageBecameVisible was broadcast at ' + now());
         });
       });
 
