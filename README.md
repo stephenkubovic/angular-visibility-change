@@ -15,16 +15,16 @@ See the [examples](./examples) folder for basic usage.  More and better examples
 
 ### onVisible(callback)
 
-Runs the `callback` function when the page becomes visible.
+Runs the `callback` function when the page becomes visible. This method can be called multiple times and all callbacks will be run.
 
 ### onHidden(callback)
 
-Runs the `callback` function when the page becomes hidden.
+Runs the `callback` function when the page becomes hidden. This method can be called multiple times and all callbacks will be run.
 
 ### onChange(callback)
 
 Runs the `callback` function whenever the page visibility changes. The callback will be called with a
-single boolean argument indicating whether the page became visible.
+single boolean argument indicating whether the page became visible. This method can be called multiple times and all callbacks will be run.
 
 ### Examples
 
@@ -88,7 +88,7 @@ angular.module('myApp', ['visibilityChange'])
 });
 ```
 
-### Enable broadcasting and configure event names
+#### Enable broadcasting and configure event names
 ```javascript
 angular.module('myApp', ['visibilityChange'])
   .run(function(VisibilityChange) {
