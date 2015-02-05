@@ -7,6 +7,10 @@ Uses the Page Visibility API to notify your Angular app when the page becomes hi
 Supports `document.hidden` and `visibilitychange`, as well as `ms`, `moz`, and `webkit` prefixes.
 Has a callback API or can be configured to use $broadcast to notify of visibility change events.
 
+## Installation
+
+`bower install angular-visibility-change`
+
 ## Examples
 
 See the [examples](./examples) folder for basic usage.  More and better examples are on the way.
