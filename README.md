@@ -9,7 +9,7 @@ Has a callback API or can be configured to use $broadcast to notify of visibilit
 
 ## Examples
 
-See the [examples](./examples') folder for basic usage.  More and better examples are on the way.
+See the [examples](./examples) folder for basic usage.  More and better examples are on the way.
 
 ## Callback API
 
