@@ -1,6 +1,6 @@
 {
   "name": "angular-visibility-change",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Detect window visibility changes in Angular.",
   "main": "./dist/angular-visibility-change.js",
   "scripts": {

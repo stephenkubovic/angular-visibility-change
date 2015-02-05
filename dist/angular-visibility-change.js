@@ -1,6 +1,6 @@
 /**
  * Detect window visibility changes in Angular.
- * @version v0.0.1 - 2015-02-04
+ * @version v0.1.0 - 2015-02-05
  * @link https://github.com/stephenkubovic/angular-visibility-change
  * @author Stephen Kubovic <stephen@skbvc.com>
  * @license MIT License, http://www.opensource.org/licenses/MIT
