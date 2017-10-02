@@ -9,11 +9,10 @@ module.service('VisibilityChange', ['$document', '$rootScope', '$timeout', funct
   var broadcastVisibleEvent = 'pageBecameVisible',
       broadcastHiddenEvent = 'pageBecameHidden',
       broadcastEnabled = false,
-      loggingEnabled = false,
       hidden = 'hidden',
-      changeCallbacks = [],
-      visibleCallbacks = [],
-      hiddenCallbacks = [],
+      changeCallbacks = {},
+      visibleCallbacks = {},
+      hiddenCallbacks = {},
       $doc = $document[0],
       visibilityChange;
 
@@ -31,16 +30,28 @@ module.service('VisibilityChange', ['$document', '$rootScope', '$timeout', funct
     }
   };
 
-  this.onChange = function(callback) {
-    changeCallbacks.push(callback);
+  this.onChange = function(callback, id) {
+    pushNewCallback(changeCallbacks, callback, id);
   };
 
-  this.onVisible = function(callback) {
-    visibleCallbacks.push(callback);
+  this.onVisible = function(callback, id) {
+    pushNewCallback(visibleCallbacks, callback, id);
   };
 
-  this.onHidden = function(callback) {
-    hiddenCallbacks.push(callback);
+  this.onHidden = function(callback, id) {
+    pushNewCallback(hiddenCallbacks, callback, id);
+  };
+
+  this.deregisterChangeCallback = function(id) {
+    delete changeCallbacks[id];
+  };
+
+  this.deregisterVisibleCallback = function(id) {
+    delete visibleCallbacks[id];
+  };
+
+  this.deregisterHiddenCallback = function(id) {
+    delete hiddenCallbacks[id];
   };
 
   if (hidden in $doc) {
@@ -54,6 +65,17 @@ module.service('VisibilityChange', ['$document', '$rootScope', '$timeout', funct
   } else {
     return;
   }
+
+  var pushNewCallback = function(callbacks, newCallBack, id) {
+    if (typeof id === 'undefined') {
+      id = 'DUMMY_ID';
+    }
+    if (!(id in changeCallbacks)) {
+      callbacks[id] = [];
+    }
+
+    callbacks[id].push(newCallBack);
+  };
 
   var onVisibilityChange = function() {
     $timeout(function() {
@@ -69,8 +91,12 @@ module.service('VisibilityChange', ['$document', '$rootScope', '$timeout', funct
     var args = Array.prototype.slice.call(arguments),
         callbacks = args.shift();
 
-    for (var i = 0; i < callbacks.length; i++) {
-      callbacks[i].apply(null, args);
+    for (var id in callbacks) {
+      if (callbacks.hasOwnProperty(id)) {
+        for (var i = 0; i < callbacks[id].length; i++) {
+          callbacks[id][i].apply(null, args);
+        }
+      }
     }
   };
 
